@@ -43,4 +43,10 @@ html, body {
     #main-container {
       padding: 30px;
     }
+    #main-container td {
+      height: 90px;
+    }
+    #main-container .btn {
+      height: 40px;
+    }
   }

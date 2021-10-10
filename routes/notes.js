@@ -4,7 +4,7 @@ const db = require('../db/connection')
 const {ObjectId} = require('mongodb') // ver depois
 
 router.get('/',(req,res)=>{ res.render('../views/notes/create') })
-// api insert nota
+// create
 router.post('/',(req,res)=> { 
     //console.log(req)
 
@@ -18,15 +18,28 @@ router.post('/',(req,res)=> {
         .insertOne({title:title, description:description})
     res.redirect(301,'/') 
 } )
-
+//read
 router.get('/:id',async function(req,res){
     console.log('params id: '+ req.params.id)
-    const idEdit = new ObjectId(req.params.id)
-    const note = await db.getDB().db().collection('notes').findOne({_id: idEdit})
+    const idFind = new ObjectId(req.params.id)
+    const note = await db.getDB().db().collection('notes').findOne({_id: idFind})
 
     res.render('notes/detail', {note}) //exibição da note a ser editada
 })
-
+//update
+router.get('/edit/:id', async function(req,res){
+    const idUpdate = new ObjectId(req.params.id)
+    console.log(idUpdate)
+    const noteUpdate = await db.getDB().db().collection('notes').findOne({_id: idUpdate})
+    res.render('notes/edit', {noteUpdate})
+})
+router.post('/update',async function(req,res){
+    const dataID = new ObjectId(req.body.id)
+  //console.log('update: '+req.body.description)
+    db.getDB().db().collection('notes').updateOne({_id: dataID},{$set: {title:req.body.title, description: req.body.description}})
+    res.redirect(301,'/')
+})
+//delete
 router.post('/delete',(req,res)=>{
     const data = req.body
         console.log(data.id)
