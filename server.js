@@ -17,8 +17,18 @@ const routeNotes = require('./routes/notes.js');
 //body parser, necessario para se trabalhar com forms
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/',(req,res)=> { res.render('home')
- console.log('passe')
+app.get('/',(req,res)=> { 
+    
+ //console.log('passe')
+
+ // exibir notas
+    (async()=>{
+        const notes = (await db.getDB().db().collection('notes').find({}).toArray());
+        res.render('home',{notes})
+        console.log(notes)
+    })().catch(err => console.log(err))
+    
+
 })
 app.use('/notes', routeNotes)
 
